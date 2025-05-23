@@ -1,5 +1,5 @@
-const {createUser,findUserByEmail} = require('../models/usermodel.js')
-const { hashPassword, comparePasswords } = require('../utils/hash')
+const {createUser,findUserByEmail} = require('../models/user_model.js')
+const { hashPassword, comparePasswords } = require('../utils/hash.js')
 
 const register = async(req,res)=>{
 	try{
@@ -42,7 +42,8 @@ const login = async(req,res)=>{
 			})
 
 		}
-		const isValid = await comparePasswords(password, user.password_hash);           if(!isValid){
+		const isValid = await comparePasswords(password, user.password_hash);
+		if(!isValid){
 		        return res.status(401).json({
 				error: 'Invalid credentials.' 
 			});
@@ -54,5 +55,5 @@ const login = async(req,res)=>{
 	}
 }
 
-
+console.log("register and login passed")
 module.exports={register, login}

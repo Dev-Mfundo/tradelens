@@ -4,7 +4,8 @@
   "description": "trading with AI",
   "main": "./src/server.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine",
+    "dev": "node --watch ./src/server.js"
   },
   "author": "aaron jiane",
   "license": "ISC",

@@ -17,8 +17,8 @@ const findUserByEmail=async(email)=>{
 	WHERE email = $1
 	`
 	const values = [email]
-	const result await query(sql,values)
+	const result = await query(sql,values)
 	return result.rows[0]
 }
-
+console.log("models passed")
 module.exports={createUser,findUserByEmail}
