@@ -12,6 +12,9 @@ app.use(cors())
 app.use(helmet())
 app.use(morgan('dev'))
 
+const userRoute=require('./routes/userRoutes')
+app.get('/api/users', userRoutes)
+
 app.get('/api/health', (req,res)=>{
 	res.status(200).json({
 		status: 'ok',

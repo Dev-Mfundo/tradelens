@@ -6,6 +6,7 @@ describe("Password Hashing utility",()=>{
 
 	beforeAll(async()=>{
 		hashedPassword = await hashPassword(plainPassword)
+		console.log("Hashed:", hashedPassword);
 	})
 	it("should hash the 'plain password' and return string", ()=>{
 		expect(typeof hashedPassword).toBe('string')
