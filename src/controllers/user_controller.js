@@ -1,59 +1,59 @@
-const {createUser,findUserByEmail} = require('../models/user_model.js')
-const { hashPassword, comparePasswords } = require('../utils/hash.js')
+const { createUser, findUserByEmail } = require('../models/user_model.js');
+const { hashPassword, comparePasswords } = require('../utils/hash.js');
 
-const register = async(req,res)=>{
-	try{
-		const {email, password} = req.body
-		if(!email || !password){
-			return res.send().status(400).json({
-				error: 'All fields must are required'
-			})
-		}
+const register = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-		const existingUser =await findUserByEmail(email)
-		if(existingUser){
-			return res.send().status(409).json({
-				error: 'User already exists'
-			})
-		}
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
 
-		const passwordHash =  await hashPassword(paswsword)
-		const newUser = await createUser({email,passwordHash})
+    const existingUser = await findUserByEmail(email);
+    if (existingUser) {
+      return res.status(409).json({ message: 'User already exists.' });
+    }
 
-	}catch(err){
-		return res.send(500).json({
-			error: 'Internal server error'})
-	}
-}
+    const passwordHash = await hashPassword(password);
+    const newUser = await createUser({ email, passwordHash });
 
+    return res.status(201).json({
+      message: 'User registered successfully.',
+      user: {
+        id: newUser.id,
+        email: newUser.email
+      }
+    });
+  } catch (err) {
+    console.error('Register Error:', err);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
 
-const login = async(req,res)=>{
-	try{
-		const {email, password} = req.body
-		if(!email || !password){
-			return res.send().json(400).json({
-				error: 'Email and Password required'
-			})
-		}
-		const user = await findUserByEmail(email)
-		if(!user){
-			return res.send().status(400).json({
-				error: 'Invalid credentials'
-			})
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-		}
-		const isValid = await comparePasswords(password, user.password_hash);
-		if(!isValid){
-		        return res.status(401).json({
-				error: 'Invalid credentials.' 
-			});
-	        }
-	}catch(err){
-		res.send().status(500).json({
-			error: 'Internal server error'
-		}) 
-	}
-}
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
 
-console.log("register and login passed")
-module.exports={register, login}
+    const user = await findUserByEmail(email);
+    if (!user || !(await comparePasswords(password, user.password_hash))) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    return res.status(200).json({
+      message: 'Login successful.',
+      user: {
+        id: user.id,
+        email: user.email
+      }
+    });
+  } catch (err) {
+    console.error('Login Error:', err);
+    return res.status(500).json({ message: 'Internal server error.' });
+  }
+};
+
+module.exports = { register, login };
